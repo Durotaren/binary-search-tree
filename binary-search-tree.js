@@ -146,6 +146,36 @@ class BinarySearchTree {
 
     this.levelOrderForEachRecursive(queue, callback);
   }
+
+  preOrderForEach(curr, callback) {
+    if (!curr) {
+      return;
+    }
+
+    callback(curr);
+    this.preOrderForEach(curr.left, callback);
+    this.preOrderForEach(curr.right, callback);
+  }
+
+  inOrderForEach(curr, callback) {
+    if (!curr) {
+      return;
+    }
+
+    this.inOrderForEach(curr.left, callback);
+    callback(curr);
+    this.inOrderForEach(curr.right, callback);
+  }
+
+  postOrderForEach(curr, callback) {
+    if (!curr) {
+      return;
+    }
+
+    this.postOrderForEach(curr.left, callback);
+    this.postOrderForEach(curr.right, callback);
+    callback(curr);
+  }
 }
 
 const tree = new BinarySearchTree();
@@ -175,4 +205,4 @@ tree.insert(4);
 tree.insert(3);
 
 prettyPrint(tree.root);
-tree.levelOrderForEachRecursive([tree.root], print);
+tree.postOrderForEach(tree.root, print);
