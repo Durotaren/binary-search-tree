@@ -50,6 +50,38 @@ class BinarySearchTree {
       curr.right = newNode;
     }
   }
+
+  getSuccessor(curr) {
+    curr = curr.right;
+    while (curr !== null && curr.left !== null) {
+      curr = curr.left;
+    }
+    return curr;
+  }
+
+  delete(root, value) {
+    if (root === null) {
+      return root;
+    }
+
+    if (root.value > value) {
+      root.left = this.delete(root.left, value);
+    } else if (root.value < value) {
+      root.right = this.delete(root.right, value);
+    } else {
+      if (root.left === null) {
+        return root.right;
+      }
+      if (root.right === null) {
+        return root.left;
+      }
+
+      const succ = this.getSuccessor(root);
+      root.value = succ.value;
+      root.right = this.delete(root.right, succ.value);
+    }
+    return root;
+  }
 }
 
 const tree = new BinarySearchTree();
@@ -67,10 +99,12 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
   }
 };
 
-tree.insert(4);
+tree.insert(5);
 tree.insert(2);
 tree.insert(1);
-tree.insert(5);
 tree.insert(6);
+tree.insert(4);
+tree.insert(3);
+tree.delete(tree.root, 2);
 
 prettyPrint(tree.root);
