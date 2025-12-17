@@ -82,6 +82,70 @@ class BinarySearchTree {
     }
     return root;
   }
+
+  find(value) {
+    if (typeof value !== 'number' || value < 0) {
+      return 'The tree only contains positive integers.';
+    }
+    if (!this.root) {
+      return 'Tree is empty.';
+    }
+
+    let curr = this.root;
+
+    while (true) {
+      if (curr.value > value) {
+        curr = curr.left;
+      } else {
+        curr = curr.right;
+      }
+
+      if (curr.value === value) {
+        return curr;
+      }
+    }
+  }
+
+  levelOrderForEachIterative(callback) {
+    if (typeof callback !== 'function') {
+      return 'Please provide a proper callback function.';
+    }
+    if (!this.root) {
+      return;
+    }
+
+    const queue = [this.root];
+
+    while (queue.length > 0) {
+      const node = queue.shift();
+      callback(node);
+
+      if (node.left !== null) {
+        queue.push(node.left);
+      }
+      if (node.right !== null) {
+        queue.push(node.right);
+      }
+    }
+  }
+
+  levelOrderForEachRecursive(queue = [this.root], callback) {
+    if (queue.length < 1) {
+      return;
+    }
+
+    const node = queue.shift();
+    callback(node);
+
+    if (node.left !== null) {
+      queue.push(node.left);
+    }
+    if (node.right !== null) {
+      queue.push(node.right);
+    }
+
+    this.levelOrderForEachRecursive(queue, callback);
+  }
 }
 
 const tree = new BinarySearchTree();
@@ -99,12 +163,16 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
   }
 };
 
+function print(node) {
+  console.log(node.value);
+}
+
 tree.insert(5);
 tree.insert(2);
 tree.insert(1);
 tree.insert(6);
 tree.insert(4);
 tree.insert(3);
-tree.delete(tree.root, 2);
 
 prettyPrint(tree.root);
+tree.levelOrderForEachRecursive([tree.root], print);
