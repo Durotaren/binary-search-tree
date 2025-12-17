@@ -1,4 +1,5 @@
 import { Node } from './node-class.js';
+
 class BinarySearchTree {
   constructor() {
     this.root = null;
@@ -19,7 +20,57 @@ class BinarySearchTree {
 
     return root;
   }
+
+  insert(value) {
+    if (typeof value !== 'number' || value < 0) {
+      return 'You can only insert positive integers.';
+    }
+    const newNode = new Node(value);
+
+    if (this.root === null) {
+      this.root = newNode;
+      return;
+    }
+
+    let curr = this.root;
+
+    while (true) {
+      if (curr.value > value && curr.left !== null) {
+        curr = curr.left;
+      } else if (curr.value < value && curr.right !== null) {
+        curr = curr.right;
+      } else {
+        break;
+      }
+    }
+
+    if (curr.value > value) {
+      curr.left = newNode;
+    } else {
+      curr.right = newNode;
+    }
+  }
 }
 
 const tree = new BinarySearchTree();
-console.log((tree.root = tree.buildTree([1, 4, 2, 5, 6])));
+
+const prettyPrint = (node, prefix = '', isLeft = true) => {
+  if (node === null) {
+    return;
+  }
+  if (node.right !== null) {
+    prettyPrint(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
+  }
+  console.log(`${prefix}${isLeft ? '└── ' : '┌── '}${node.value}`);
+  if (node.left !== null) {
+    prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
+  }
+};
+
+tree.insert(4);
+tree.insert(2);
+tree.insert(1);
+tree.insert(5);
+tree.insert(6);
+
+prettyPrint(tree.root);
