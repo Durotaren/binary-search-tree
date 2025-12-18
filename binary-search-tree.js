@@ -87,23 +87,26 @@ class BinarySearchTree {
     if (typeof value !== 'number' || value < 0) {
       return 'The tree only contains positive integers.';
     }
+
     if (!this.root) {
       return 'Tree is empty.';
     }
 
     let curr = this.root;
 
-    while (true) {
+    while (curr !== null) {
+      if (curr.value === value) {
+        return curr;
+      }
+
       if (curr.value > value) {
         curr = curr.left;
       } else {
         curr = curr.right;
       }
-
-      if (curr.value === value) {
-        return curr;
-      }
     }
+
+    return null;
   }
 
   levelOrderForEachIterative(callback) {
@@ -176,6 +179,23 @@ class BinarySearchTree {
     this.postOrderForEach(curr.right, callback);
     callback(curr);
   }
+
+  heightDFS(node) {
+    if (node === null) {
+      return -1;
+    }
+
+    let left = this.heightDFS(node.left);
+    let right = this.heightDFS(node.right);
+
+    return Math.max(left, right) + 1;
+  }
+
+  height(value) {
+    let curr = this.find(value);
+
+    return this.heightDFS(curr);
+  }
 }
 
 const tree = new BinarySearchTree();
@@ -205,4 +225,4 @@ tree.insert(4);
 tree.insert(3);
 
 prettyPrint(tree.root);
-tree.postOrderForEach(tree.root, print);
+console.log(tree.height(4));
