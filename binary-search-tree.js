@@ -257,8 +257,8 @@ class BinarySearchTree {
   rebalance(root) {
     if (!this.isBalanced(root)) {
       let arr = this.modifiedLevelOrderForEachIterative(root);
-      this.root = this.buildTree(arr);
-      return this.root;
+      let newRoot = this.buildTree(arr);
+      return newRoot;
     }
   }
 }
@@ -282,13 +282,24 @@ function print(node) {
   console.log(node.value);
 }
 
-tree.insert(5);
-tree.insert(2);
-tree.insert(1);
-tree.insert(6);
-tree.insert(4);
-tree.insert(3);
+let arr = [];
+for (let i = 0; i < 96; i++) {
+  arr.push(i);
+}
 
-prettyPrint(tree.root);
+tree.root = tree.buildTree(arr);
 console.log(tree.isBalanced(tree.root));
-console.log(tree.rebalance(tree.root));
+tree.levelOrderForEachIterative(print);
+tree.preOrderForEach(tree.root, print);
+tree.inOrderForEach(tree.root, print);
+tree.postOrderForEach(tree.root, print);
+tree.insert(150);
+tree.insert(125);
+tree.insert(101);
+console.log(tree.isBalanced(tree.root));
+tree.root = tree.rebalance(tree.root);
+console.log(tree.isBalanced(tree.root));
+tree.levelOrderForEachIterative(print);
+tree.preOrderForEach(tree.root, print);
+tree.inOrderForEach(tree.root, print);
+tree.postOrderForEach(tree.root, print);
