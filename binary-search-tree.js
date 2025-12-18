@@ -196,6 +196,71 @@ class BinarySearchTree {
 
     return this.heightDFS(curr);
   }
+
+  depth(value) {
+    let current = this.root;
+    let counter = 0;
+
+    while (current !== null) {
+      if (current.value === value) {
+        return counter;
+      }
+
+      if (current.value < value) {
+        counter++;
+        current = current.right;
+      } else if (current.value > value) {
+        counter++;
+        current = current.left;
+      }
+    }
+    return null;
+  }
+
+  isBalanced(root) {
+    if (!root) {
+      return true;
+    }
+
+    let left = root.left ? this.height(root.left.value) : -1;
+    let right = root.right ? this.height(root.right.value) : -1;
+
+    if (Math.abs(left - right) > 1) {
+      return false;
+    }
+
+    return this.isBalanced(root.left) && this.isBalanced(root.right);
+  }
+
+  modifiedLevelOrderForEachIterative(callback) {
+    if (!this.root) {
+      return;
+    }
+
+    const queue = [this.root];
+    let arr = [];
+
+    while (queue.length > 0) {
+      const node = queue.shift();
+      arr.push(node.value);
+
+      if (node.left !== null) {
+        queue.push(node.left);
+      }
+      if (node.right !== null) {
+        queue.push(node.right);
+      }
+    }
+    return arr;
+  }
+
+  rebalance(root) {
+    if (!this.isBalanced(root)) {
+      let arr = this.modifiedLevelOrderForEachIterative(root);
+      this.root = this.buildTree(arr);
+      return this.root;
+    }
+  }
 }
 
 const tree = new BinarySearchTree();
@@ -225,4 +290,5 @@ tree.insert(4);
 tree.insert(3);
 
 prettyPrint(tree.root);
-console.log(tree.height(4));
+console.log(tree.isBalanced(tree.root));
+console.log(tree.rebalance(tree.root));
